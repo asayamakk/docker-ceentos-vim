@@ -18,6 +18,10 @@ RUN mkdir -p /data/gitfiles && \
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
+ARG VIMRC_SOURCE_URL="$VIMRC_SOURCE_URL"
+RUN if [ -n "$VIMRC_SOURCE_URL" ]; then \
+      curl $VIMRC_SOURCE_URL -o ~/.vimrc; \
+    fi
 
 RUN yum install -y man wget curl tree grep openssl which
 
