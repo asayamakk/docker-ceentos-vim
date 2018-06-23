@@ -1,10 +1,11 @@
 FROM centos:7
 
-# ncurses-devel TUIのアプリ(vim)動かすのに必要
+#  INSTALL vim
+## ncurses-devel required for TUI applications
 RUN yum update -y && \
-    yum groupinstall -y "Development Tools" && \
-    yum install -y wget curl tree grep libssl-dev openssl \
-                   ncurses-devel lua-devel ruby-devel
+    yum groupinstall -x ctags -y "Development Tools" && \
+    yum install -y ncurses-devel lua-devel ruby-devel
+
 RUN mkdir -p /data/gitfiles && \
     cd /data/gitfiles && \
     git clone https://github.com/vim/vim.git && \
@@ -16,5 +17,17 @@ RUN mkdir -p /data/gitfiles && \
 
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+
+RUN yum install -y man wget curl tree grep openssl which
+
+WORKDIR /data/gitfiles
+
+# INSTALL ctags
+RUN git clone https://github.com/universal-ctags/ctags.git && \
+    cd ctags && \
+    ./autogen.sh && ./configure --enable-iconv && \
+    make && make install
+
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
