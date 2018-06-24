@@ -4,7 +4,8 @@ FROM centos:7
 ## ncurses-devel required for TUI applications
 RUN yum update -y && \
     yum groupinstall -x ctags -y "Development Tools" && \
-    yum install -y ncurses-devel lua-devel ruby-devel
+    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    yum install -y ncurses-devel lua-devel ruby-devel python-devel python36-devel.x86_64
 
 RUN mkdir -p /data/gitfiles && \
     cd /data/gitfiles && \
@@ -12,7 +13,8 @@ RUN mkdir -p /data/gitfiles && \
     cd /data/gitfiles/vim && \
      ./configure --with-features=huge \
                  --enable-fail-if-missing --enable-multibyte --enable-fontset \
-                 --enable-rubyinterp --enable-luainterp && \
+                 --enable-rubyinterp --enable-pythoninterp --enable-python3interp --enable-luainterp \
+                 --with-python3-command=/usr/bin/python3.6 && \
     make && make install
 
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
